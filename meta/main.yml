@@ -1,0 +1,11 @@
+---
+dependencies: []
+
+galaxy_info:
+  role_name: haproxy-ocp
+  author: raimondvanstijn
+  description: Installs HAProxy and configures an API and ingress load balancer for OpenShift Container Platform
+  galaxy_tags:
+    - haproxy
+    - openshift
+    - ocp
