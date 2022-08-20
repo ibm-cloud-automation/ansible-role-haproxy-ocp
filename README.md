@@ -1,4 +1,4 @@
-# Ansible Role: OCP HAProxy
+# Ansible Role: HAProxy OCP
 
 Installs HAProxy and configures an API and ingress load balancer for OpenShift Container Platform.
 
