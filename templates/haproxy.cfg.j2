@@ -1,0 +1,46 @@
+global
+  log         127.0.0.1 local2
+  pidfile     /var/run/haproxy.pid
+  maxconn     4000
+  daemon
+defaults
+  mode                    http
+  log                     global
+  option                  dontlognull
+  option http-server-close
+  option                  redispatch
+  retries                 3
+  timeout http-request    10s
+  timeout queue           1m
+  timeout connect         10s
+  timeout client          1m
+  timeout server          1m
+  timeout http-keep-alive 10s
+  timeout check           10s
+  maxconn                 3000
+listen api-server-6443 
+  bind *:6443
+  mode tcp
+{% for node in haproxy_api_server_nodes %}
+  server {{ node.name }} {{ node.name }}.{{ haproxy_domain_name }}:6443 check inter 1s
+{% endfor %}
+listen machine-config-server-22623 
+  bind *:22623
+  mode tcp
+{% for node in haproxy_api_server_nodes %}
+  server {{ node.name }} {{ node.name }}.{{ haproxy_domain_name }}:22623 check inter 1s
+{% endfor %}
+listen ingress-router-443 
+  bind *:443
+  mode tcp
+  balance source
+{% for node in haproxy_ingress_nodes %}
+  server {{ node.name }} {{ node.name }}.{{ haproxy_domain_name }}:443 check inter 1s
+{% endfor %}
+listen ingress-router-80 
+  bind *:80
+  mode tcp
+  balance source
+{% for node in haproxy_ingress_nodes %}
+  server {{ node.name }} {{ node.name }}.{{ haproxy_domain_name }}:80 check inter 1s
+{% endfor %}
